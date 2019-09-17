@@ -34,7 +34,7 @@ def get_dict(file: str):
         #populate dict_sfid
         if(row[6]!=""):
           if row[6] in dict_wid.keys():
-            dict_sfid[row[6]] = dict_wid[row[6]]+[row[:6]]
+            dict_sfid[row[6]] = dict_sfid[row[6]]+[row[:6]]
           else:
             dict_sfid[row[6]]=[row[:6]]
         else:
