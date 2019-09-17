@@ -23,24 +23,29 @@ def get_dict(file: str):
         line_count = line_count+1
       else:
         # populate dict_wid
-        if(row[0]!=""):
-          if row[0] in dict_wid.keys():
-            dict_wid[row[0]] = dict_wid[row[0]]+[row[1:]]
+        tempRow = row.copy()
+        wid = tempRow.pop(0)
+        if(wid!=""):
+          if wid in dict_wid.keys():
+            dict_wid[wid] = dict_wid[wid]+[tempRow]
           else:
-            dict_wid[row[0]]=[row[1:]]
+            dict_wid[wid]=[tempRow]
         else:
           print("worker id is empty in row"+str(line_count))
 
         #populate dict_sfid
-        if(row[6]!=""):
-          if row[6] in dict_wid.keys():
-            dict_sfid[row[6]] = dict_sfid[row[6]]+[row[:6]]
+        tempRow2 = row.copy()
+        sid = tempRow2.pop(1)
+        if(sid!=""):
+          if sid in dict_sfid.keys():
+            dict_sfid[sid] = dict_sfid[sid]+[tempRow2]
           else:
-            dict_sfid[row[6]]=[row[:6]]
+            dict_sfid[sid]=[tempRow2]
         else:
           print("supportforce id is empty in row"+str(line_count))
 
         line_count = line_count + 1
+
 
     return (colName, dict_wid, dict_sfid)
 
@@ -60,14 +65,18 @@ def compareAndPrintColumns(colNames, dict_wid, dict_sfid, file):
       else:
         line_count = line_count + 1
 
+        tempRow = row.copy()
+        ig_wid = tempRow.pop(0)
+        tempCol = colNames.copy()
+        tempCol.pop(0)
         #match on worker id
-        if( row[0] != "" and row[0] in dict_wid.keys() ):
-          for row2 in dict_wid[row[0]]:
-            if row[1:] != row2:
-              print(row[0],end=': ')
+        if( ig_wid != "" and ig_wid in dict_wid.keys() ):
+          for row2 in dict_wid[ig_wid]:
+            if tempRow != row2:
+              print(ig_wid,end=': ')
               for i in range(0,len(row2)):
-                if row[i+1] != row2[i]:
-                  print(colNames[i+1],end=' ')
+                if tempRow[i] != row2[i]:
+                  print(tempCol[i],end=' ')
           print('\n')
 
   print(''''---- done matching on worker---''')
@@ -86,14 +95,19 @@ def compareAndPrintColumns(colNames, dict_wid, dict_sfid, file):
       else:
         line_count = line_count + 1
 
+
+        tempRow2 = row.copy()
+        ig_sid = tempRow2.pop(1)
+        tempCol2 = colNames.copy()
+        tempCol2.pop(1)
         #match on supportforce id
-        if( row[6] != "" and row[6] in dict_sfid.keys() ):
-          for row3 in dict_sfid[row[6]]:
-            if row[:6] != row3:
-              print(row[6],end=': ')
+        if( ig_sid != "" and ig_sid in dict_sfid.keys() ):
+          for row3 in dict_sfid[ig_sid]:
+            if tempRow2 != row3:
+              print(ig_sid,end=': ')
               for i in range(0,len(row3)):
-                if row[i] != row3[i]:
-                  print(colNames[i],end=' ')
+                if tempRow2[i] != row3[i]:
+                  print(tempCol2[i],end=' ')
           print('\n')
 
 
